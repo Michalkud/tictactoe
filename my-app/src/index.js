@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { createStore } from 'redux'
+import { createStore } from 'redux';
+import { connect } from 'react-redux';
 
 function Square(props) {
     return (
@@ -43,6 +44,45 @@ class Board extends React.Component {
         );
     }
   }
+
+  class Board2 extends React.Component {
+
+    constructor(props){
+        console.log(props);
+        super(props);
+        this.props = props;
+    }
+    renderSquare(i, onSquareClick) {
+        return (
+        <Square 
+            value={this.props.squares[i]}
+            onClick={() => onSquareClick(i)}
+        />
+        );
+    }
+  
+    render() { 
+        return (
+        <div>
+            <div className="board-row">
+            {this.renderSquare(0, onSquareClick)}
+            {this.renderSquare(1, onSquareClick)}
+            {this.renderSquare(2)}
+            </div>
+            <div className="board-row">
+            {this.renderSquare(3)}
+            {this.renderSquare(4)}
+            {this.renderSquare(5)}
+            </div>
+            <div className="board-row">
+            {this.renderSquare(6)}
+            {this.renderSquare(7)}
+            {this.renderSquare(8)}
+            </div>
+        </div>
+        );
+    }
+  }
   
   class Game extends React.Component {
     constructor() {
@@ -62,7 +102,7 @@ class Board extends React.Component {
         const squares = current.squares.slice();
         if (calculateWinner(squares) || squares[i]) {
             return;
-         }
+        }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
             history: history.concat([{
@@ -112,6 +152,8 @@ class Board extends React.Component {
                 squares={current.squares}
                 onClick={(i) => this.handleClick(i)}
             />
+            <Board2
+            />
             </div>
             <div className="game-info">
             <div>{status}</div>
@@ -144,18 +186,38 @@ function calculateWinner(squares) {
 }
 
 function tictactoe(
-    state = {history: [{
-        squares: Array(9).fill(null),
-    }]}, action
+    state = {
+        moves: {},
+    }, action
 ){
     switch (action.type) {
         case 'NEW_MOVE':
+            Object.assign(Object.assign({}, )
             return Object.assign({}, action.payload)
         default:
             return state
     }
 }
 
+
+
+const mapStateToProps = state => {
+    return state
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onSquareClick: index => {
+            dispatch({type: 'NEW_MOVE', payload: index})
+        }
+    }
+}
+
+const VisibleSquares = connect(
+    mapStateToProps,
+    mapDispatchToProps
+
+)(Board2)
 let store = createStore(tictactoe)
   
 
