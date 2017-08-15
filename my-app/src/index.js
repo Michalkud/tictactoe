@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { createStore } from 'redux'
 
 function Square(props) {
     return (
@@ -70,6 +71,8 @@ class Board extends React.Component {
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
         });
+
+        store.dispatch({type: "NEW_MOVE", payload: this.state.history})
     }
 
     jumpTo(step) {
@@ -139,7 +142,23 @@ function calculateWinner(squares) {
     }
     return null;
 }
+
+function tictactoe(
+    state = {history: [{
+        squares: Array(9).fill(null),
+    }]}, action
+){
+    switch (action.type) {
+        case 'NEW_MOVE':
+            return Object.assign({}, action.payload)
+        default:
+            return state
+    }
+}
+
+let store = createStore(tictactoe)
   
+
   ReactDOM.render(
     <Game />,
     document.getElementById('root')
