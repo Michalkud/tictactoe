@@ -3,19 +3,20 @@ import React from 'react';
 import Square from './square'
 
 class Board extends React.Component {
-    renderSquare(i, onSquareClick) {
-      return <Square value={i} onSquareClick={onSquareClick} />;
+    renderSquare(value, onSquareClick, i) {
+      return <Square  key={i} value={value} onSquareClick={onSquareClick} i={i} />;
     }
 
-    renderRow(values, onSquareClick) {
+    renderRow(values, onSquareClick, i) {
 
         let row = []
-        values.map((value) => {
-            row.push(this.renderSquare(value, onSquareClick));
+
+        values.map((value, x) => {
+            row.push(this.renderSquare(value, onSquareClick, i + x));
         })
 
         return (
-            <div className="board-row">
+            <div key={i} className="board-row">
                 {row}
             </div>);
     }
@@ -25,15 +26,14 @@ class Board extends React.Component {
         let squared = Math.sqrt(board.length);
         let rows = [];
         for (let i = 0; i < squared; i++) { 
-            rows.push(this.renderRow(board.slice(i*squared, ((i + 1)*squared)), onSquareClick)); 
+            rows.push(this.renderRow(board.slice(i*squared, ((i + 1)*squared)), onSquareClick, i*squared)); 
         }
-        console.log(rows)
+     
         return rows;
     }
   
     render() {
-        console.log(this.props.board);
-      const status = 'Next player: X';
+      
   
       return (
 
@@ -43,7 +43,7 @@ class Board extends React.Component {
             {this.renderBoard(this.props.board, this.props.onSquareClick)}
                      
             
-          <div className="status">{status}</div>
+          
         </div>
       );
     }

@@ -12,13 +12,16 @@ import reducer from './reducers/main.reducer.js';
 let store = createStore(reducer);
 
 const mapStateToProps = state => {
-    return {moves: state.moves, xIsNext: state.xIsNext}
+    return {moves: state.moves, xIsNext: state.xIsNext, boardSize: state.boardSize}
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onSquareClick: id => {
-            dispatch({type: "NEW_CLICK", payload: id})
+            dispatch({type: "NEW_MOVE", payload: id})
+        },
+        onInputChange: event => {
+            dispatch({type: "NEW_SIZE", payload: event.target.value})
         }
     }
 };
